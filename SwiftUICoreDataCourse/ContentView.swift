@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  SwiftUICoreDataCourse
-//
-//  Created by CMDB-127710 on 14.11.2022.
-//
-
 import SwiftUI
 import CoreData
 
