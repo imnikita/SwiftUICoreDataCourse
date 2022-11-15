@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		383787E129238A5A00066E28 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383787E029238A5A00066E28 /* MainView.swift */; };
 		38B4A10629226AB10095886B /* SwiftUICoreDataCourseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */; };
 		38B4A10829226AB10095886B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B4A10729226AB10095886B /* ContentView.swift */; };
 		38B4A10A29226AB20095886B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38B4A10929226AB20095886B /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		383787E029238A5A00066E28 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		38B4A10229226AB10095886B /* SwiftUICoreDataCourse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUICoreDataCourse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUICoreDataCourseApp.swift; sourceTree = "<group>"; };
 		38B4A10729226AB10095886B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,6 +38,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		383787DF29238A2A00066E28 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				383787E029238A5A00066E28 /* MainView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		38B4A0F929226AB10095886B = {
 			isa = PBXGroup;
 			children = (
@@ -55,6 +65,7 @@
 		38B4A10429226AB10095886B /* SwiftUICoreDataCourse */ = {
 			isa = PBXGroup;
 			children = (
+				383787DF29238A2A00066E28 /* Main */,
 				38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */,
 				38B4A10729226AB10095886B /* ContentView.swift */,
 				38B4A10929226AB20095886B /* Assets.xcassets */,
@@ -167,6 +178,7 @@
 				38B4A10F29226AB20095886B /* Persistence.swift in Sources */,
 				38B4A11229226AB20095886B /* SwiftUICoreDataCourse.xcdatamodeld in Sources */,
 				38B4A10829226AB10095886B /* ContentView.swift in Sources */,
+				383787E129238A5A00066E28 /* MainView.swift in Sources */,
 				38B4A10629226AB10095886B /* SwiftUICoreDataCourseApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
