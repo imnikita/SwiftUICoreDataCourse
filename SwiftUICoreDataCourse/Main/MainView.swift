@@ -76,6 +76,8 @@ struct MainView: View {
     }
 }
 
+
+/// The commented part below is needed for convenient switching between previews
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
