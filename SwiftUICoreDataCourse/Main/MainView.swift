@@ -2,55 +2,113 @@ import SwiftUI
 
 struct MainView: View {
 
+    @Environment(\.managedObjectContext) private var viewContext
+
     @State private var shouldPresentAddCardForm = false
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Card.timestamp, ascending: false)],
+        animation: .default)
+    private var cards: FetchedResults<Card>
 
     var body: some View {
         NavigationView {
             ScrollView {
-                TabView {
-                    ForEach(0..<5) { num in
-                        CreditCardView()
-                            .padding(.bottom, 50)
+                if !cards.isEmpty {
+                    TabView {
+                        ForEach(cards) { card in
+                            CreditCardView(card: card)
+                                .padding(.bottom, 50)
+                        }
+                    }
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                    .frame(height: 280)
+                    .indexViewStyle(.page(backgroundDisplayMode: .always))
+                } else {
+                    VStack {
+                        Group {
+                            Text("You are currently have no cards in the system")
+                                .padding(.horizontal, 48)
+                                .padding(.vertical)
+                                .multilineTextAlignment(.center)
+                            addFirstCardButton
+                        }
+                        .font(.system(size: 24, weight: .semibold))
                     }
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
-                .frame(height: 280)
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
                 Spacer()
                     .fullScreenCover(isPresented: $shouldPresentAddCardForm) {
                         AddCardView()
                     }
             }
             .navigationTitle("Credit card")
-            .navigationBarItems(trailing: addCardButton)
+            .navigationBarItems(leading: leadingNavBarButtons,
+                                trailing: addCardButton)
         }
     }
 
+    // MARK: - CreditCardView
     struct CreditCardView: View {
+
+        @State private var shouldShowActionSheet = false
+        @State private var shouldShowEditForm = false
+        let card: Card
+
+        private func handleDelete() {
+            let viewContext = PersistenceController.shared.container.viewContext
+            viewContext.delete(card)
+            do {
+                try viewContext.save()
+            } catch {
+                debugPrint(error.localizedDescription)
+            }
+        }
+
         var body: some View {
             VStack(alignment: .leading, spacing: 16) {
-                Text("Blue visa card")
-                    .font(.system(size: 24, weight: .semibold))
                 HStack {
-                    Image("visa")
+                    Text(card.name ?? "")
+                        .font(.system(size: 24, weight: .semibold))
+                    Spacer()
+                    ellipsisButton
+                }
+                HStack {
+                    let imageName = card.type?.lowercased() ?? "Visa"
+                    Image(imageName)
                         .resizable()
                         .scaledToFit()
                         .frame(height: 44)
                         .clipped()
+
                     Spacer()
-                    Text("Balance: 5000$")
+                    Text("Balance: \(card.limit)$")
                         .font(.system(size: 18, weight: .semibold))
                 }
-                Text("1234 1234 1234 1234")
-                Text("Credit limit: 50000$")
-                HStack{ Spacer() }
+                Text(card.number ?? "")
+                HStack {
+                    Text("Credit Limit: $\(card.limit)")
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text("Valid to:")
+                        Text("\(String(format: "%02d", card.expMonth))/\(String(card.expYear % 2000))")
+                    }
+                }
             }
             .foregroundColor(.white)
             .padding()
             .background(
-                LinearGradient(colors: [
-                    Color.blue.opacity(0.6), Color.blue
-                ], startPoint: .top, endPoint: .bottom)
+                VStack {
+                    if let colorData = card.color,
+                        let uiColor = UIColor.color(data: colorData),
+                    let color = Color(uiColor) {
+                        LinearGradient(colors: [
+                            color.opacity(0.6),
+                            color
+                        ], startPoint: .top, endPoint: .bottom)
+                    } else {
+                        Color.cyan
+                    }
+                }
             )
             .overlay(RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.black.opacity(0.5), lineWidth: 1)
@@ -59,20 +117,96 @@ struct MainView: View {
             .shadow(radius: 5)
             .padding(.horizontal)
             .padding(.top, 8)
+            .fullScreenCover(isPresented: $shouldShowEditForm) {
+                AddCardView(card: card)
+            }
+        }
+
+        private var ellipsisButton: some View {
+            Button {
+                shouldShowActionSheet.toggle()
+            } label: {
+                Image(systemName: "ellipsis")
+                    .font(.system(size: 28, weight: .bold))
+            }
+            .actionSheet(isPresented: $shouldShowActionSheet) {
+                .init(title: Text(card.name ?? ""), message: Text("Options"), buttons: [
+                    .default(Text("Edit"), action: {
+                        shouldShowEditForm.toggle()
+                    }),
+                    .destructive(Text("DELETE"), action: handleDelete),
+                    .cancel()
+                ])
+            }
         }
     }
 
-    var addCardButton: some View {
+    // MARK: - Views
+    private var leadingNavBarButtons: some View {
+        HStack {
+            addItemButton
+            deleteAllButton
+        }
+    }
+
+    private var addCardButton: some View {
         Button(action: {
-           shouldPresentAddCardForm.toggle()
-       }, label: {
-           Text("+ Card")
-               .foregroundColor(.white)
-               .font(.system(size: 16, weight: .bold))
-               .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
-               .background(Color.black)
-               .cornerRadius(5)
-       })
+            shouldPresentAddCardForm.toggle()
+        }, label: {
+            Text("+ Card")
+                .foregroundColor(.white)
+                .font(.system(size: 16, weight: .bold))
+                .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                .background(Color.black)
+                .cornerRadius(5)
+        })
+    }
+
+    private var deleteAllButton: some View {
+        Button {
+            cards.forEach { card in
+                viewContext.delete(card)
+            }
+            do {
+                try viewContext.save()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        } label: {
+            Text("Delete All")
+        }
+
+    }
+
+    private var addItemButton: some View {
+        Button(action: {
+            withAnimation {
+                let viewContext = PersistenceController.shared.container.viewContext
+                let card = Card(context: viewContext)
+                card.timestamp = Date()
+                do {
+                    try viewContext.save()
+                } catch {
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
+            }
+        }, label: {
+            Text("Add Item")
+        })
+    }
+
+    private var addFirstCardButton: some View {
+        Button {
+            shouldPresentAddCardForm.toggle()
+        } label: {
+            Text("+ Add your first card")
+                .foregroundColor(Color(.systemBackground))
+        }
+        .padding(EdgeInsets(top: 10, leading: 14, bottom: 10, trailing: 14))
+        .background(Color(.label))
+        .cornerRadius(5)
     }
 }
 
@@ -80,7 +214,9 @@ struct MainView: View {
 /// The commented part below is needed for convenient switching between previews
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
+        let viewContext = PersistenceController.shared.container.viewContext
         MainView()
+            .environment(\.managedObjectContext, viewContext)
 //        AddCardView()
     }
 }
