@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct MainView: View {
+
+    @State private var shouldPresentAddCardForm = false
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -13,12 +16,16 @@ struct MainView: View {
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                 .frame(height: 280)
                 .indexViewStyle(.page(backgroundDisplayMode: .always))
+                Spacer()
+                    .fullScreenCover(isPresented: $shouldPresentAddCardForm) {
+                        AddCardView()
+                    }
             }
             .navigationTitle("Credit card")
             .navigationBarItems(trailing: addCardButton)
         }
     }
-    
+
     struct CreditCardView: View {
         var body: some View {
             VStack(alignment: .leading, spacing: 16) {
@@ -54,21 +61,26 @@ struct MainView: View {
             .padding(.top, 8)
         }
     }
-    
-    var addCardButton: some View = Button(action: {
-        
-    }, label: {
-        Text("+ Card")
-            .foregroundColor(.white)
-            .font(.system(size: 16, weight: .bold))
-            .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
-            .background(Color.black)
-            .cornerRadius(5)
-    })
+
+    var addCardButton: some View {
+        Button(action: {
+           shouldPresentAddCardForm.toggle()
+       }, label: {
+           Text("+ Card")
+               .foregroundColor(.white)
+               .font(.system(size: 16, weight: .bold))
+               .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+               .background(Color.black)
+               .cornerRadius(5)
+       })
+    }
 }
 
+
+/// The commented part below is needed for convenient switching between previews
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+//        AddCardView()
     }
 }
