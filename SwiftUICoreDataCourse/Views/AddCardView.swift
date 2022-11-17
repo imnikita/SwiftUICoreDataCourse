@@ -13,6 +13,25 @@ struct AddCardView: View {
     @State private var color = Color.blue
     private var currentYear = Calendar.current.component(.year, from: Date())
 
+    let card: Card?
+
+    init(card: Card? = nil) {
+        self.card = card
+        _name = State(initialValue: self.card?.name ?? "")
+        _cardNumber = State(initialValue: self.card?.number ?? "")
+        if let limit = self.card?.limit {
+            _creditLimit = State(initialValue: String(limit))
+        }
+        if let colorData = self.card?.color,
+            let uiColor = UIColor.color(data: colorData) {
+            let color = Color(uiColor)
+            _color = State(initialValue: color)
+        }
+        _cardType = State(initialValue: card?.type ?? "")
+        _month = State(initialValue: Int(self.card?.expMonth ?? 1))
+        _month = State(initialValue: Int(self.card?.expYear ?? Int16(currentYear)))
+    }
+
     var body: some View {
         NavigationView {
             Form {
@@ -53,18 +72,50 @@ struct AddCardView: View {
                     Text("Color")
                 }
             }
-            .navigationTitle(Text("Add Credit Card"))
-            .navigationBarItems(leading: Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }, label: {
-                Text("Cancel")
-            }))
+            .navigationTitle(Text( self.card != nil ? self.card?.name ?? "" : "Add Credit Card"))
+            .navigationBarItems(leading: cancelButton,
+                                trailing: saveButton)
         }
+    }
+
+    private var cancelButton: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }, label: {
+            Text("Cancel")
+        })
+    }
+
+    private var saveButton: some View {
+        Button(action: {
+            let viewContext = PersistenceController.shared.container.viewContext
+            let card = self.card != nil ? self.card! : Card(context: viewContext)
+            card.name = self.name
+            card.number = self.cardNumber
+            card.limit = Int32(self.creditLimit) ?? 0
+            card.expMonth = Int16(self.month)
+            card.expYear = Int16(self.year)
+            card.timestamp = Date()
+            card.color = UIColor(color).encode()
+            card.type = cardType.replacingOccurrences(of: " ", with: "")
+            do {
+                try viewContext.save()
+                presentationMode.wrappedValue.dismiss()
+            } catch {
+                debugPrint("Persistent error: \(error.localizedDescription)")
+            }
+        }, label: {
+            Text("Save")
+        })
     }
 }
 
+/// The commented part below is needed for convenient switching between previews
 struct AddCardView_Previews: PreviewProvider {
     static var previews: some View {
-        AddCardView()
+        let viewContext = PersistenceController.shared.container.viewContext
+//        AddCardView()
+        MainView()
+            .environment(\.managedObjectContext, viewContext)
     }
 }
