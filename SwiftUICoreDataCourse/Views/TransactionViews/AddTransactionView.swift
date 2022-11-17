@@ -1,10 +1,3 @@
-//
-//  AddTransactionView.swift
-//  SwiftUICoreDataCourse
-//
-//  Created by CMDB-127710 on 17.11.2022.
-//
-
 import SwiftUI
 
 struct AddTransactionView: View {
@@ -18,7 +11,6 @@ struct AddTransactionView: View {
     @State private var date = Date()
     @State private var photoData: Data?
 
-    
     var body: some View {
         NavigationView {
             Form {
