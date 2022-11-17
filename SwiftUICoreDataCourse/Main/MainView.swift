@@ -5,6 +5,7 @@ struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @State private var shouldPresentAddCardForm = false
+    @State private var cardSelectionIndex = 0
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Card.timestamp, ascending: false)],
@@ -15,15 +16,20 @@ struct MainView: View {
         NavigationView {
             ScrollView {
                 if !cards.isEmpty {
-                    TabView {
-                        ForEach(cards) { card in
-                            CreditCardView(card: card)
-                                .padding(.bottom, 50)
+                    TabView(selection: $cardSelectionIndex) {
+                        ForEach(0..<cards.count, id: \.self) { index in
+                            CreditCardView(card: cards[index])
+                                .padding(.bottom, 50)   
+                                .tag(index)
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                     .frame(height: 280)
                     .indexViewStyle(.page(backgroundDisplayMode: .always))
+
+                    if let card = cards[cardSelectionIndex] {
+                        TransactionsListView(card: card)
+                    }
                 } else {
                     VStack {
                         Group {
@@ -209,7 +215,6 @@ struct MainView: View {
         .cornerRadius(5)
     }
 }
-
 
 /// The commented part below is needed for convenient switching between previews
 struct MainView_Previews: PreviewProvider {
