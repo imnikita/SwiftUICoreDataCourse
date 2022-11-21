@@ -10,6 +10,7 @@ struct AddTransactionView: View {
     @State private var amount = ""
     @State private var date = Date()
     @State private var photoData: Data?
+    @State private var selectedCategories = Set<TransactionCategory>()
 
     var body: some View {
         NavigationView {
@@ -18,6 +19,24 @@ struct AddTransactionView: View {
                     TextField("Name", text: $name)
                     TextField("Amount", text: $amount)
                     DatePicker("Date", selection: $date, displayedComponents: .date)
+                }
+
+                Section(header: Text("Categories")) {
+                    let array = Array(selectedCategories).sorted(by: {
+                        $0.timestamp?.compare($1.timestamp ?? Date()) == .orderedAscending
+                    })
+                    ForEach(array) { category in
+                        HStack(spacing: 12) {
+                            if let colorData = category.color, let
+                                uiColor = UIColor.color(data: colorData) {
+                                let color = Color(uiColor: uiColor)
+                                Spacer()
+                                    .frame(width: 30, height: 10)
+                                    .background(color)
+                            }
+                            Text(category.name ?? "")
+                        }
+                    }
                     manyToManyLink
                 }
 
@@ -45,10 +64,11 @@ struct AddTransactionView: View {
 
     private var manyToManyLink: some View {
         NavigationLink {
-            Text("New category")
-                .navigationTitle("Title")
+            CategoriesListView(selectedCategories: $selectedCategories)
+                .navigationTitle("Categories")
+                .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
         } label: {
-            Text("many to many")
+            Text("Select categories")
         }
     }
 

@@ -6,6 +6,7 @@ struct MainView: View {
 
     @State private var shouldPresentAddCardForm = false
     @State private var cardSelectionIndex = 0
+    @State private var selectedCardHash = -1
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Card.timestamp, ascending: false)],
@@ -16,22 +17,25 @@ struct MainView: View {
         NavigationView {
             ScrollView {
                 if !cards.isEmpty {
-                    TabView(selection: $cardSelectionIndex) {
-                        ForEach(0..<cards.count, id: \.self) { index in
-                            CreditCardView(card: cards[index])
-                                .padding(.bottom, 50)   
-                                .tag(index)
+                    TabView(selection: $selectedCardHash) {
+                        ForEach(cards) { card in
+                            CreditCardView(card: card)
+                                .padding(.bottom, 50)
+                                .tag(card.hash)
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                     .frame(height: 280)
                     .indexViewStyle(.page(backgroundDisplayMode: .always))
+                    .onAppear {
+                        self.selectedCardHash = cards.first?.hash ?? -1
+                    } 
 
-                    if let card = cards[cardSelectionIndex] {
-                        TransactionsListView(card: card)
+                    if let cardIndex = cards.firstIndex(where: { $0.hash == selectedCardHash}) {
+                        TransactionsListView(card: cards[cardIndex])
                     }
                 } else {
-                    VStack {
+                    VStack {  
                         Group {
                             Text("You are currently have no cards in the system")
                                 .padding(.horizontal, 48)
@@ -44,7 +48,9 @@ struct MainView: View {
                 }
                 Spacer()
                     .fullScreenCover(isPresented: $shouldPresentAddCardForm) {
-                        AddCardView()
+                        AddCardView(card: nil) { card in
+                            self.selectedCardHash = card.hash
+                        }
                     }
             }
             .navigationTitle("Credit card")
