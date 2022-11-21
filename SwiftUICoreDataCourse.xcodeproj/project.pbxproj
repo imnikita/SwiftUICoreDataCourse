@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		382A1C74292693F20074878F /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382A1C73292693F20074878F /* UIImage+Ext.swift */; };
 		383787E129238A5A00066E28 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383787E029238A5A00066E28 /* MainView.swift */; };
 		383787E42923ACF700066E28 /* AddCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383787E32923ACF700066E28 /* AddCardView.swift */; };
 		384EC2432926295900FAA1B8 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EC2422926295900FAA1B8 /* AddTransactionView.swift */; };
@@ -14,6 +15,7 @@
 		384EC2542926594800FAA1B8 /* TransactionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EC2532926594800FAA1B8 /* TransactionsListView.swift */; };
 		384EC2562926772500FAA1B8 /* CardTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EC2552926772500FAA1B8 /* CardTransactionView.swift */; };
 		38690AF5292507F600837BBE /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38690AF4292507F600837BBE /* UIColor+Ext.swift */; };
+		38897C922926A426009B92A4 /* CategoriesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38897C912926A426009B92A4 /* CategoriesListView.swift */; };
 		38B4A10629226AB10095886B /* SwiftUICoreDataCourseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */; };
 		38B4A10829226AB10095886B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B4A10729226AB10095886B /* ContentView.swift */; };
 		38B4A10A29226AB20095886B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38B4A10929226AB20095886B /* Assets.xcassets */; };
@@ -23,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		382A1C73292693F20074878F /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 		383787E029238A5A00066E28 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		383787E32923ACF700066E28 /* AddCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCardView.swift; sourceTree = "<group>"; };
 		384EC2422926295900FAA1B8 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 		384EC2532926594800FAA1B8 /* TransactionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListView.swift; sourceTree = "<group>"; };
 		384EC2552926772500FAA1B8 /* CardTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransactionView.swift; sourceTree = "<group>"; };
 		38690AF4292507F600837BBE /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
+		38897C912926A426009B92A4 /* CategoriesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesListView.swift; sourceTree = "<group>"; };
 		38B4A10229226AB10095886B /* SwiftUICoreDataCourse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUICoreDataCourse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUICoreDataCourseApp.swift; sourceTree = "<group>"; };
 		38B4A10729226AB10095886B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -61,6 +65,7 @@
 		383787E22923ACE500066E28 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				38897C902926A415009B92A4 /* Categories */,
 				384EC25729267DD600FAA1B8 /* TransactionViews */,
 				383787E32923ACF700066E28 /* AddCardView.swift */,
 			);
@@ -96,8 +101,17 @@
 			isa = PBXGroup;
 			children = (
 				38690AF4292507F600837BBE /* UIColor+Ext.swift */,
+				382A1C73292693F20074878F /* UIImage+Ext.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		38897C902926A415009B92A4 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				38897C912926A426009B92A4 /* CategoriesListView.swift */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		38B4A0F929226AB10095886B = {
@@ -242,11 +256,13 @@
 				38690AF5292507F600837BBE /* UIColor+Ext.swift in Sources */,
 				38B4A10F29226AB20095886B /* Persistence.swift in Sources */,
 				38B4A11229226AB20095886B /* SwiftUICoreDataCourse.xcdatamodeld in Sources */,
+				38897C922926A426009B92A4 /* CategoriesListView.swift in Sources */,
 				383787E42923ACF700066E28 /* AddCardView.swift in Sources */,
 				384EC246292633BF00FAA1B8 /* ImagePickerView.swift in Sources */,
 				38B4A10829226AB10095886B /* ContentView.swift in Sources */,
 				384EC2432926295900FAA1B8 /* AddTransactionView.swift in Sources */,
 				384EC2542926594800FAA1B8 /* TransactionsListView.swift in Sources */,
+				382A1C74292693F20074878F /* UIImage+Ext.swift in Sources */,
 				383787E129238A5A00066E28 /* MainView.swift in Sources */,
 				38B4A10629226AB10095886B /* SwiftUICoreDataCourseApp.swift in Sources */,
 			);

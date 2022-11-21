@@ -14,9 +14,11 @@ struct AddCardView: View {
     private var currentYear = Calendar.current.component(.year, from: Date())
 
     let card: Card?
+    var didAddCard: ((Card) -> ())? = nil
 
-    init(card: Card? = nil) {
+    init(card: Card? = nil, didAddCard: ((Card) -> ())? = nil) {
         self.card = card
+        self.didAddCard = didAddCard
         _name = State(initialValue: self.card?.name ?? "")
         _cardNumber = State(initialValue: self.card?.number ?? "")
         if let limit = self.card?.limit {
@@ -35,7 +37,6 @@ struct AddCardView: View {
     var body: some View {
         NavigationView {
             Form {
-
                 Section {
                     TextField("Name", text: $name)
                     TextField("Credit card number", text: $cardNumber)
@@ -100,6 +101,7 @@ struct AddCardView: View {
             card.type = cardType.replacingOccurrences(of: " ", with: "")
             do {
                 try viewContext.save()
+                didAddCard?(card)
                 presentationMode.wrappedValue.dismiss()
             } catch {
                 debugPrint("Persistent error: \(error.localizedDescription)")
