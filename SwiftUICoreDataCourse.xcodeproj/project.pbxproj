@@ -15,6 +15,7 @@
 		384EC2542926594800FAA1B8 /* TransactionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EC2532926594800FAA1B8 /* TransactionsListView.swift */; };
 		384EC2562926772500FAA1B8 /* CardTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384EC2552926772500FAA1B8 /* CardTransactionView.swift */; };
 		38690AF5292507F600837BBE /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38690AF4292507F600837BBE /* UIColor+Ext.swift */; };
+		387C2162292BB3FD0003E13F /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387C2161292BB3FD0003E13F /* FilterView.swift */; };
 		38897C922926A426009B92A4 /* CategoriesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38897C912926A426009B92A4 /* CategoriesListView.swift */; };
 		38B4A10629226AB10095886B /* SwiftUICoreDataCourseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */; };
 		38B4A10829226AB10095886B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B4A10729226AB10095886B /* ContentView.swift */; };
@@ -33,6 +34,7 @@
 		384EC2532926594800FAA1B8 /* TransactionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsListView.swift; sourceTree = "<group>"; };
 		384EC2552926772500FAA1B8 /* CardTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransactionView.swift; sourceTree = "<group>"; };
 		38690AF4292507F600837BBE /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
+		387C2161292BB3FD0003E13F /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		38897C912926A426009B92A4 /* CategoriesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesListView.swift; sourceTree = "<group>"; };
 		38B4A10229226AB10095886B /* SwiftUICoreDataCourse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUICoreDataCourse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38B4A10529226AB10095886B /* SwiftUICoreDataCourseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUICoreDataCourseApp.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 		383787E22923ACE500066E28 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				387C2160292BB3ED0003E13F /* Filter */,
 				38897C902926A415009B92A4 /* Categories */,
 				384EC25729267DD600FAA1B8 /* TransactionViews */,
 				383787E32923ACF700066E28 /* AddCardView.swift */,
@@ -104,6 +107,14 @@
 				382A1C73292693F20074878F /* UIImage+Ext.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		387C2160292BB3ED0003E13F /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				387C2161292BB3FD0003E13F /* FilterView.swift */,
+			);
+			path = Filter;
 			sourceTree = "<group>";
 		};
 		38897C902926A415009B92A4 /* Categories */ = {
@@ -252,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				387C2162292BB3FD0003E13F /* FilterView.swift in Sources */,
 				384EC2562926772500FAA1B8 /* CardTransactionView.swift in Sources */,
 				38690AF5292507F600837BBE /* UIColor+Ext.swift in Sources */,
 				38B4A10F29226AB20095886B /* Persistence.swift in Sources */,

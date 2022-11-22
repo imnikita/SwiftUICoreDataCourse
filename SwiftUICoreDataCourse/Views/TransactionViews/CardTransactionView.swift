@@ -1,13 +1,8 @@
-//
-//  CardTransactionView.swift
-//  SwiftUICoreDataCourse
-//
-//  Created by CMDB-127710 on 17.11.2022.
-//
-
 import SwiftUI
 
 struct CardTransactionView: View {
+
+    @Environment(\.colorScheme) var colorScheme
 
     @State var shouldPresentActionSheet = false
     var transaction: CardTransaction
@@ -30,6 +25,30 @@ struct CardTransactionView: View {
                     Text(String(format: "$%.2f", transaction.amount))
                 }
             }
+
+            if let categoriesSet = transaction.categories as? Set<TransactionCategory> {
+                let array = Array(categoriesSet).sorted(by: {
+                    $0.timestamp?.compare($1.timestamp ?? Date()) == .orderedAscending
+                })
+                HStack {
+                    ForEach(array, id: \.self) { category in
+                        HStack {
+                            if let colorData = category.color, let
+                                uiColor = UIColor.color(data: colorData) {
+                                let color = Color(uiColor: uiColor)
+                                Text(category.name ?? "")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 8)
+                                    .background(color)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(5)
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+            }
             if let imageData = transaction.photoData,
                 let uiImage = UIImage(data: imageData) {
                 Image(uiImage: uiImage)
@@ -38,7 +57,7 @@ struct CardTransactionView: View {
             }
         }
         .padding()
-        .background(Color.white)
+        .background(colorScheme == .dark ? .gray : .white)
         .cornerRadius(5)
         .shadow(radius: 5)
         .padding()

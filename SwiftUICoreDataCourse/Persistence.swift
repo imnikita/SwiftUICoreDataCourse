@@ -1,14 +1,9 @@
-//
-//  Persistence.swift
-//  SwiftUICoreDataCourse
-//
-//  Created by CMDB-127710 on 14.11.2022.
-//
-
 import CoreData
+import SwiftUI
 
 struct PersistenceController {
     static let shared = PersistenceController()
+    static let hasSeededData = "hasSeededData"
 
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
@@ -51,6 +46,22 @@ struct PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+        seedInitialData()
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+
+    private func seedInitialData() {
+        guard !UserDefaults.standard.bool(forKey: Self.hasSeededData) else { return }
+        let context = container.viewContext
+        let category = TransactionCategory(context: context)
+        category.name = "Office supplies"
+        category.color = UIColor.blue.encode()
+        category.timestamp = Date()
+        do {
+            try context.save()
+            UserDefaults.standard.set(true, forKey: Self.hasSeededData)
+        } catch {
+            debugPrint("Failed to save initial data.")
+        }
     }
 }

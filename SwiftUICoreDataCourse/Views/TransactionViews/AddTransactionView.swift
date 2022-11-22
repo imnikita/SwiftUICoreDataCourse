@@ -4,6 +4,22 @@ struct AddTransactionView: View {
 
     let card: Card
 
+    init(card: Card) {
+        self.card = card
+
+        let context = PersistenceController.shared.container.viewContext
+        let request = TransactionCategory.fetchRequest()
+        request.sortDescriptors = [.init(key: "timestamp", ascending: false)]
+        do {
+            let result = try context.fetch(request)
+            if let firstCategory = result.first {
+                _selectedCategories = .init(initialValue: [firstCategory])
+            }
+        } catch {
+            debugPrint("error")
+        }
+    }
+
     @Environment(\.presentationMode) var presentationMode
     @State private var shouldPresentPhotoPicker = false
     @State private var name = ""
@@ -89,6 +105,7 @@ struct AddTransactionView: View {
             transaction.timestamp = date
             transaction.photoData = photoData
             transaction.card = card
+            transaction.categories = selectedCategories as NSSet
             do {
                 try context.save()
                 presentationMode.wrappedValue.dismiss()

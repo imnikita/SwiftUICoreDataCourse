@@ -62,9 +62,21 @@ struct MainView: View {
     // MARK: - CreditCardView
     struct CreditCardView: View {
 
+        @Environment(\.managedObjectContext) private var viewContext
+
         @State private var shouldShowActionSheet = false
         @State private var shouldShowEditForm = false
         let card: Card
+
+        var fetchRequest: FetchRequest<CardTransaction>
+
+        init(card: Card) {
+            self.card = card
+
+            fetchRequest = FetchRequest<CardTransaction>(entity: CardTransaction.entity(), sortDescriptors: [
+                .init(key: "timestamp", ascending: false)
+            ], predicate: .init(format: "card == %@", self.card))
+        }
 
         private func handleDelete() {
             let viewContext = PersistenceController.shared.container.viewContext
@@ -93,7 +105,7 @@ struct MainView: View {
                         .clipped()
 
                     Spacer()
-                    Text("Balance: \(card.limit)$")
+                    Text("Balance: $\(getBalance())")
                         .font(.system(size: 18, weight: .semibold))
                 }
                 Text(card.number ?? "")
@@ -151,6 +163,13 @@ struct MainView: View {
                 ])
             }
         }
+
+        private func getBalance() -> String {
+            let balance = fetchRequest.wrappedValue.reduce(0, {
+                $0 + $1.amount
+            })
+            return String(format: "%.2f", balance)
+        }
     }
 
     // MARK: - Views
@@ -177,7 +196,7 @@ struct MainView: View {
     private var deleteAllButton: some View {
         Button {
             cards.forEach { card in
-                viewContext.delete(card)
+                viewContext.delete(card) 
             }
             do {
                 try viewContext.save()
@@ -204,7 +223,7 @@ struct MainView: View {
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
-        }, label: {
+        }, label: { 
             Text("Add Item")
         })
     }

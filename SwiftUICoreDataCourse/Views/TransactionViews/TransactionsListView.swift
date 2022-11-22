@@ -15,21 +15,76 @@ struct TransactionsListView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @State private var shouldShowTransactionForm = false
+    @State private var shouldShowFilterSheet = false
+    @State private var selectedCategories = Set<TransactionCategory>()
 
     var fetchRequest: FetchRequest<CardTransaction>
 
     var body: some View {
         VStack {
-            Text("Get started by adding your first transaction")
-            addTransactionButton
-            ForEach(fetchRequest.wrappedValue) { transaction in
-                CardTransactionView(transaction: transaction)
+            if fetchRequest.wrappedValue.isEmpty {
+                Text("Get started by adding your first transaction")
+                addTransactionButton
+            } else {
+                HStack( spacing: 12) {
+                    Spacer()
+                    addTransactionButton
+                    filterButton
+                }
+                .padding(.horizontal)
+                ForEach(filterTransactions(selectedCategories: selectedCategories)) { transaction in
+                    CardTransactionView(transaction: transaction)
+                }
+            }
+        }
+        .fullScreenCover(isPresented: $shouldShowTransactionForm) {
+            AddTransactionView(card: card)
+        }
+    }
+
+    private func filterTransactions(selectedCategories: Set<TransactionCategory>) -> [CardTransaction] {
+        if selectedCategories.isEmpty {
+            return Array(fetchRequest.wrappedValue)
+        }
+
+        return fetchRequest.wrappedValue.filter { transaction in
+            var shouldKeep = false
+
+            if let categories = transaction.categories as? Set<TransactionCategory> {
+                categories.forEach { category in
+                    if selectedCategories.contains(category) {
+                        shouldKeep = true
+                    }
+                }
+            }
+            return shouldKeep
+        }
+    }
+
+    private var filterButton: some View {
+        Button {
+            shouldShowFilterSheet.toggle()
+        } label: {
+            HStack {
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                Text("Filter")
+            }
+            .padding(EdgeInsets(top: 10, leading: 14,
+                                bottom: 10, trailing: 14))
+            .background(Color(.label))
+            .foregroundColor(Color(.systemBackground))
+            .font(.headline)
+            .cornerRadius(5)
+        }
+        .sheet(isPresented: $shouldShowFilterSheet) {
+            FilterView(selectedCategories: selectedCategories) { categories in
+                selectedCategories = categories
             }
         }
     }
 
     private var addTransactionButton: some View {
-        Button {
+        return Button {
             shouldShowTransactionForm.toggle()
         } label: {
             Text("+ Transaction")
@@ -39,9 +94,6 @@ struct TransactionsListView: View {
                 .foregroundColor(Color(.systemBackground))
                 .font(.headline)
                 .cornerRadius(5)
-        }
-        .fullScreenCover(isPresented: $shouldShowTransactionForm) {
-            AddTransactionView(card: card)
         }
     }
 }
